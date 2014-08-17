@@ -52,7 +52,7 @@ namespace RegionFlags
                         player.Teleport((int)pos.X, (int)pos.Y);
                         if( warning )
                         {
-                            player.SendMessage(String.Format("[SYSTEM] You can't enter {0} at your level!", r.Name), Color.OrangeRed);// Terrabear
+                            player.SendMessage(String.Format("[SYSTEM] You can't enter {0} at your level!", r.Name), Color.OrangeRed);
                             lastWarned = now;
                         }
                     }

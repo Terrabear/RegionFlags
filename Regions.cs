@@ -5,8 +5,9 @@ using TShockAPI.DB;
 
 namespace RegionFlags
 {
-    class FlaggedRegion
-    {
+        #region FlaggedRegion
+        class FlaggedRegion {
+        
         private int flags = 0;
         private Region region;
         private int dps = 0;
@@ -41,7 +42,9 @@ namespace RegionFlags
         {
             flags &= (int)(~f);
         }
+        #endregion
 
+        #region GetFlags
         public List<Flags> getFlags()
         {
             List<Flags> f = new List<Flags>();
@@ -134,10 +137,11 @@ namespace RegionFlags
         {
             return bannedItems;
         }
-    }
-
-    class FlaggedRegionManager
-    {
+        #endregion
+}
+        #region RegionManager
+        class FlaggedRegionManager {
+        
         private Dictionary<string, FlaggedRegion> regions;
         
         public FlaggedRegionManager()
@@ -221,4 +225,5 @@ namespace RegionFlags
 		    regions.Clear();
 	    }
     }
+    #endregion
 }

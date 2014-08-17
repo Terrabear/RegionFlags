@@ -13,9 +13,10 @@ using TShockAPI.Hooks;
 
 namespace RegionFlags
 {
-    [ApiVersion(1,16)]
-    public class RegionFlags : TerrariaPlugin
-    {
+        #region Main
+        [ApiVersion(1,16)]
+        public class RegionFlags : TerrariaPlugin {
+        
         private FlaggedRegionManager regions;
         private RegionPlayer[] players;
         public static IDbConnection db;
@@ -42,7 +43,6 @@ namespace RegionFlags
             get { return new Version(0, 1); }
         }
 
-
         public RegionFlags( Main game ) : base( game )
         {
             Order = 3;
@@ -51,7 +51,9 @@ namespace RegionFlags
             npchooks = new NPCHooks( regions );
             playerhooks = new PlayerHooks( regions );
         }
+        #endregion
 
+        #region Init&Dispose
         protected override void Dispose(bool disposing)
         {
             if( disposing )
@@ -83,7 +85,9 @@ namespace RegionFlags
 	        TShockAPI.Hooks.GeneralHooks.ReloadEvent += OnReload;
             Database();
         }
+        #endregion
 
+        #region Database
         private void Database()
         {
             if (TShock.Config.StorageType.ToLower() == "sqlite")
@@ -131,12 +135,6 @@ namespace RegionFlags
             creator.EnsureExists(table);
         }
 
-	    private void OnReload(ReloadEventArgs args)
-	    {
-		    regions.Clear();
-			Import(new EventArgs());
-	    }
-
         private void Import(EventArgs args)
         {
             String query = "SELECT * FROM Regions";
@@ -156,6 +154,30 @@ namespace RegionFlags
                 }
             }
         }
+        #endregion
+
+        #region OnEvent
+        private void OnReload(ReloadEventArgs args)
+        {
+            regions.Clear();
+            Import(new EventArgs());
+        }
+
+        private void OnGreet(GreetPlayerEventArgs args)
+        {
+            lock (players)
+            {
+                players[args.Who] = new RegionPlayer(TShock.Players[args.Who], regions);
+            }
+        }
+
+        private void OnLeave(LeaveEventArgs args)
+        {
+            lock (players)
+            {
+                players[args.Who] = null;
+            }
+        }
 
         private void OnItemDrop( object sender, TShockAPI.GetDataHandlers.ItemDropEventArgs args )
         {
@@ -171,23 +193,9 @@ namespace RegionFlags
                 }
             }
         }
+        #endregion
 
-        private void OnGreet(GreetPlayerEventArgs args)
-        {
-            lock (players)
-            {
-				players[args.Who] = new RegionPlayer(TShock.Players[args.Who], regions);
-            }
-        }
-
-        private void OnLeave(LeaveEventArgs args)
-        {
-            lock (players)
-            {
-                players[args.Who] = null;
-            }
-        }
-
+        #region DateTime
         private DateTime lastUpdate = DateTime.Now;
         private void OnUpdate(EventArgs args)
         {
@@ -237,7 +245,9 @@ namespace RegionFlags
                 }
             }
         }
+        #endregion
 
+        #region Set&Define
         private void SetFlags( CommandArgs args )
         {
             if (args.Parameters.Count == 1 && args.Parameters[0] == "flags")
@@ -326,7 +336,9 @@ namespace RegionFlags
                 }
             }
         }
+        #endregion
 
+        #region HPS&DPS
         private void SetDPS( CommandArgs args)
         {
             if (args.Parameters.Count < 2)
@@ -385,4 +397,5 @@ namespace RegionFlags
             }
         }
     }
+        #endregion
 }
