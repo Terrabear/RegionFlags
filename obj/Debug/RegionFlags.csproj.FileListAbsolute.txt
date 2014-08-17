@@ -16,3 +16,11 @@ C:\Users\Stark\Downloads\Region_Flags\bin\TShockAPI.dll
 C:\Users\Stark\Downloads\Region_Flags\obj\Debug\RegionFlags.csprojResolveAssemblyReference.cache
 C:\Users\Stark\Downloads\Region_Flags\obj\Debug\RegionFlags.dll
 C:\Users\Stark\Downloads\Region_Flags\obj\Debug\RegionFlags.pdb
+D:\dev\Work\RegionFlags\bin\RegionFlags.dll
+D:\dev\Work\RegionFlags\bin\RegionFlags.pdb
+D:\dev\Work\RegionFlags\bin\Mono.Data.Sqlite.dll
+D:\dev\Work\RegionFlags\bin\TerrariaServer.exe
+D:\dev\Work\RegionFlags\bin\TShockAPI.dll
+D:\dev\Work\RegionFlags\obj\Debug\RegionFlags.csprojResolveAssemblyReference.cache
+D:\dev\Work\RegionFlags\obj\Debug\RegionFlags.dll
+D:\dev\Work\RegionFlags\obj\Debug\RegionFlags.pdb

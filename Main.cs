@@ -24,7 +24,7 @@ namespace RegionFlags
 
         public override string Author
         {
-            get { return "[Olink + Terrabear]"; }
+            get { return "Olink + Terrabear"; }
         }
 
         public override string Description
