@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using TShockAPI;
 using TShockAPI.DB;
-
+using Terraria;
+using System.Linq;
 namespace RegionFlags
-{
+{ 
         #region FlaggedRegion
         class FlaggedRegion {
         
@@ -30,15 +31,15 @@ namespace RegionFlags
             return region;
         }
 
-        public void setFlags(Flags f)
+        public void SetFlags(Flags f)
         {
             if (f == Flags.NONE)
                 flags = 0;
             else
-                flags |= (int)f;
+                flags |= (int)f; // |: shift + \
         }
 
-        public void removeFlags(Flags f)
+        public void DelFlags(Flags f)
         {
             flags &= (int)(~f);
         }
@@ -108,19 +109,14 @@ namespace RegionFlags
             return flags;
         }
 
-        public int getDPS()
-        {
-            return dps;
-        }
-
         public void setDPS(int s)
         {
             dps = s;
         }
 
-        public int getHPS()
+        public int getDPS()
         {
-            return hps;
+            return dps;
         }
 
         public void setHPS(int s)
@@ -128,12 +124,17 @@ namespace RegionFlags
             hps = s;
         }
 
+        public int getHPS()
+        {
+            return hps;
+        }
+
         public void setBannedItems(List<string> items)
         {
             bannedItems = items;
         }
 
-        public List<String> getItembans()
+        public List<String> getBannedItems()
         {
             return bannedItems;
         }
@@ -148,20 +149,21 @@ namespace RegionFlags
         {
             regions = new Dictionary<string, FlaggedRegion>();
         }
-
-        public void ImportRegion( string name, int flags, int d, int h, List<string> items )
+        public void ImportRegion( string name, int flags, int d, int h, List<string> items ) // add string wid after name
         {
+            //public List<Region> ListAllRegions(string worldid);
+            //var rid = TShock.Regions.ListAllRegions(wid);
             var reg = TShock.Regions.GetRegionByName(name);
-            if( reg == null )
+            if (reg == null) // add rid.Equals(Main.worldID)
             {
-                Console.WriteLine( "{0} was not found in tshocks region list.", name);
+                Console.WriteLine( "{0} was not found in region list.", name);
                 return;
             }
             FlaggedRegion f = new FlaggedRegion(reg, flags);
-            f.setDPS( d );
+            f.setDPS(d);
             f.setHPS(h);
 			f.setBannedItems(items);
-            regions.Add( name, f );
+            regions.Add(name, f);
         }
 
         public bool AddRegion( string name, int flags )
@@ -173,7 +175,7 @@ namespace RegionFlags
             var reg = TShock.Regions.GetRegionByName(name);
             FlaggedRegion f = new FlaggedRegion(reg, flags);
             f.setDPS(0);
-            //todo:save to db
+            //TODO: Save to db
             RegionFlags.db.Query(
                     "INSERT INTO Regions (Name, Flags, Damage) VALUES (@0, @1, @2);",
                     name, flags, 0);
@@ -202,7 +204,6 @@ namespace RegionFlags
             {
                 return regions[region];
             }
-
             return null;
         }
 

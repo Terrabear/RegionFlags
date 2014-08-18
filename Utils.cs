@@ -16,8 +16,7 @@ namespace RegionFlags
             // This is for special pickaxe/hammers/swords etc
             Main.item[itemid].SetDefaults(name);
             // The set default overrides the wet and stack set by NewItem
-            Main.item[itemid].wet = Collision.WetCollision(Main.item[itemid].position, Main.item[itemid].width,
-                                                           Main.item[itemid].height);
+            Main.item[itemid].wet = Collision.WetCollision(Main.item[itemid].position, Main.item[itemid].width, Main.item[itemid].height);
             Main.item[itemid].stack = stack;
             Main.item[itemid].owner = id;
             Main.item[itemid].prefix = (byte)prefix;
@@ -43,6 +42,7 @@ namespace RegionFlags
         HEAL = 512,
         NOPVP = 1024,
         ITEMBAN = 2048,
+        NOPROJ = 4096,
     }
 
     class PositionQueue
@@ -66,7 +66,7 @@ namespace RegionFlags
             positions.Enqueue(pos);
         }
 
-        public Vector2 getTP()
+        public Vector2 getpos()
         {
             Vector2 pos = positions.Peek();
             reset(pos);

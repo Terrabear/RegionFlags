@@ -38,7 +38,7 @@ namespace RegionFlags
             bool inPVPZone = false;
             bool inNoPVPZone = false;
 
-            bool warning = ((now - lastWarned).TotalSeconds > 5);
+            bool warning = ((now - lastWarned).TotalSeconds >= 5);
 
             if( r != null )
             {
@@ -48,24 +48,25 @@ namespace RegionFlags
                     List<Flags> flags = reg.getFlags();
                     if( flags.Contains(Flags.PRIVATE) && !r.HasPermissionToBuildInRegion(player) )
                     {
-                        Vector2 pos = positions.getTP();
+                        Vector2 pos = positions.getpos();
                         player.Teleport((int)pos.X, (int)pos.Y);
-                        if( warning )
+                        if(warning)
                         {
                             player.SendMessage(String.Format("[SYSTEM] You can't enter {0} at your level!", r.Name), Color.OrangeRed);
                             lastWarned = now;
                         }
                     }
 	                List<string> bannedItems = new List<string>();
-	                if (flags.Contains(Flags.ITEMBAN) && InvalidInventory(reg.getItembans(), out bannedItems))
+                    if (flags.Contains(Flags.ITEMBAN) && InvalidInventory(reg.getBannedItems(), out bannedItems))
 	                {
-						Vector2 pos = positions.getTP();
+						Vector2 pos = positions.getpos();
 		                Vector2 diff = pos - player.TPlayer.position;
-						if(((diff.X*diff.X) + (diff.Y*diff.Y)) > (100*100))
+						
+                        if(((diff.X*diff.X) + (diff.Y*diff.Y)) > (100*100))
 							player.Teleport((int)pos.X, (int)pos.Y);
-						else
+						
+                        else
 							player.Spawn(Main.spawnTileX, Main.spawnTileY);
-
 
 						if (warning)
 						{
@@ -87,12 +88,12 @@ namespace RegionFlags
                     {
                         if (!player.TPlayer.hostile)
                         {
-                            player.SendMessage("[SYSTEM] PVP Arena: PvP enabled.", Color.Yellow);
+                            player.SendMessage("[SYSTEM] You can't toggle PvP here!", Color.Red);
                         }
 
                         player.TPlayer.hostile = true;
                         player.SendData(PacketTypes.TogglePvp);
-                        NetMessage.SendData((int) PacketTypes.TogglePvp, -1, -1, "", player.Index);
+                        //NetMessage.SendData((int) PacketTypes.TogglePvp, -1, -1, "", player.Index);
                         inPVPZone = true;
                         forcedPVP = true;
                     }
@@ -100,12 +101,12 @@ namespace RegionFlags
                     {
                         if (player.TPlayer.hostile)
                         {
-                            player.SendMessage("[SYSTEM] None-PvP Zone: PvP disabled.", Color.Yellow);
+                            player.SendMessage("[SYSTEM] You can't toggle PvP here!", Color.Red);
                         }
 
                         player.TPlayer.hostile = false;
                         player.SendData(PacketTypes.TogglePvp);
-                        NetMessage.SendData((int)PacketTypes.TogglePvp, -1, -1, "", player.Index);
+                        //NetMessage.SendData((int)PacketTypes.TogglePvp, -1, -1, "", player.Index);
                         inNoPVPZone = true;
                         removedPVP = true;
                     }
@@ -142,7 +143,7 @@ namespace RegionFlags
                 player.TPlayer.hostile = false;
                 player.SendData(PacketTypes.TogglePvp);
                 NetMessage.SendData((int)PacketTypes.TogglePvp, -1, -1, "", player.Index);
-                player.SendMessage("[SYSTEM] PvP Arena left, Now you can toggle PvP.", Color.Green);
+                player.SendMessage("[SYSTEM] PvP Arena left: Now you can toggle PvP.", Color.Green);
             }
 
             if (!inNoPVPZone && removedPVP)
@@ -151,7 +152,7 @@ namespace RegionFlags
                 player.TPlayer.hostile = false;
                 player.SendData(PacketTypes.TogglePvp);
                 NetMessage.SendData((int)PacketTypes.TogglePvp, -1, -1, "", player.Index);
-                player.SendMessage("[SYSTEM] None-PvP Zone left, Now you can toggle PvP.", Color.Green);
+                player.SendMessage("[SYSTEM] Safe Zone left: Now you can toggle PvP.", Color.Green);
             }
 
             if ((now - lastUpdate).TotalSeconds > 1)
