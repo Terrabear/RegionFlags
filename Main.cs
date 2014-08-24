@@ -35,7 +35,7 @@ namespace RegionFlags
 
         public override string Name
         {
-            get { return "Region flags."; }
+            get { return "RegionFlags."; }
         }
 
         public override Version Version
