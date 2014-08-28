@@ -49,7 +49,7 @@ namespace RegionFlags
                 if( reg != null )
                 {
                     List<Flags> flags = reg.getFlags();
-                    if (flags.Contains(Flags.PRIVATE) && !player.Group.HasPermission("enter." + r.Name + "")) // && !r.HasPermissionToBuildInRegion(player))
+                    if (flags.Contains(Flags.PRIVATE) && !player.Group.HasPermission("enter."+ r.Name +"")) // && !r.HasPermissionToBuildInRegion(player))
                     {
                         Vector2 pos = positions.getpos();
                         player.Teleport((int)pos.X, (int)pos.Y);
@@ -60,7 +60,7 @@ namespace RegionFlags
                         }
                     }
 	                List<string> bannedItems = new List<string>();
-                    if (flags.Contains(Flags.ITEMBAN) && InvalidInventory(reg.getBannedItems(), out bannedItems))
+                    if (flags.Contains(Flags.ITEMBAN) && InvalidInventory(reg.getBannedItems(), out bannedItems) && !player.Group.HasPermission("rf.ibpass"))
 	                {
 						Vector2 pos = positions.getpos();
 		                Vector2 diff = pos - player.TPlayer.position;
@@ -164,7 +164,7 @@ namespace RegionFlags
                 player.TPlayer.hostile = false;
                 player.SendData(PacketTypes.TogglePvp);
                 NetMessage.SendData((int)PacketTypes.TogglePvp, -1, -1, "", player.Index);
-                player.SendMessage("[SYSTEM] PvP Arena left: Now you can toggle PvP.", Color.Green);
+                player.SendMessage("[FREE] PvP can be toggled.", Color.MediumSeaGreen);
             }
 
             if (!inNoPVPZone && removedPVP)
@@ -173,7 +173,7 @@ namespace RegionFlags
                 player.TPlayer.hostile = false;
                 player.SendData(PacketTypes.TogglePvp);
                 NetMessage.SendData((int)PacketTypes.TogglePvp, -1, -1, "", player.Index);
-                player.SendMessage("[SYSTEM] Safe Zone left: Now you can toggle PvP.", Color.Green);
+                player.SendMessage("[FREE] PvP can be toggled.", Color.MediumSeaGreen);
             }
 
             if ((now - lastUpdate).TotalSeconds > 1)

@@ -154,9 +154,13 @@ namespace RegionFlags
             //public List<Region> ListAllRegions(string worldid);
             //var rid = TShock.Regions.ListAllRegions(wid);
             var reg = TShock.Regions.GetRegionByName(name);
-            if (reg == null) // add rid.Equals(Main.worldID)
+            //var regwid = TShock.Regions.GetRegionByWorldID(wid);
+            if (reg == null) // && regwid == Main.worldID.ToString // add rid.Equals(Main.worldID)
             {
-                Console.WriteLine( "{0} was not found in region list.", name);
+                //Console.ForegroundColor = ConsoleColor.Magenta;
+                //Log.Error("Some regions were not found in this world.");
+
+                //Console.WriteLine( "{0} was not found in region list.", name);
                 return;
             }
             FlaggedRegion f = new FlaggedRegion(reg, flags);
@@ -193,6 +197,8 @@ namespace RegionFlags
 
             FlaggedRegion f = regions[name];
 
+            //string Flagsnew = "";
+            //Flagsnew = String.Join(",", f.getIntFlags);
             RegionFlags.db.Query(
                     "UPDATE Regions SET Flags=@0, Damage=@1, Heal=@2 WHERE Name=@3", f.getIntFlags(), f.getDPS(), f.getHPS(), name);
             return true;

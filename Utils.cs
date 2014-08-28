@@ -43,6 +43,7 @@ namespace RegionFlags
         NOPVP = 1024,
         ITEMBAN = 2048,
         NOPROJ = 4096,
+        PJKILL = 8192
     }
 
     class PositionQueue

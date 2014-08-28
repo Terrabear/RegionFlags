@@ -22,6 +22,7 @@ namespace RegionFlags
         public static IDbConnection db;
         private NPCHooks npchooks;
         private PlayerHooks playerhooks;
+        //private Utils utils;
 
         public override string Author
         {
@@ -35,7 +36,7 @@ namespace RegionFlags
 
         public override string Name
         {
-            get { return "RegionFlags."; }
+            get { return "RegionFlags"; }
         }
 
         public override Version Version
@@ -124,7 +125,7 @@ namespace RegionFlags
             var table = new SqlTable("Regions",
                                      new SqlColumn("Name", MySqlDbType.VarChar, 56){ Length = 56, Primary = true},
                                      //new SqlColumn("WorldID", MySqlDbType.Int32),
-                                     new SqlColumn("Flags", MySqlDbType.Int32){ DefaultValue = "0" },
+                                     new SqlColumn("Flags", MySqlDbType.Text){ DefaultValue = "0" },
                                      new SqlColumn("Damage", MySqlDbType.Int32) { DefaultValue = "0" },
                                      new SqlColumn("Heal", MySqlDbType.Int32) { DefaultValue = "0" },
 									 new SqlColumn("BannedItems", MySqlDbType.Text) { DefaultValue = "" }
@@ -203,11 +204,11 @@ namespace RegionFlags
         private DateTime lastUpdate = DateTime.Now;
         private void OnUpdate(EventArgs args)
         {
-            lock( players )
+            lock (players)
             {
-                foreach( RegionPlayer ply in players )
+                foreach (RegionPlayer ply in players)
                 {
-                    if( ply != null )
+                    if (ply != null)
                     {
                         ply.Update();
                     }
@@ -215,7 +216,7 @@ namespace RegionFlags
             }
 
             DateTime now = DateTime.Now;
-            if( (now - lastUpdate).TotalSeconds > 0 )
+            if ((now - lastUpdate).TotalSeconds > 0)
             {
                 lastUpdate = now;
                 lock (Main.npc)
@@ -226,7 +227,7 @@ namespace RegionFlags
                             continue;
 
                         Region r = TShock.Regions.GetTopRegion(
-                            TShock.Regions.InAreaRegion((int) npc.position.X/16, (int) npc.position.Y/16));
+                        TShock.Regions.InAreaRegion((int)npc.position.X / 16, (int)npc.position.Y / 16));
                         if (r != null)
                         {
                             FlaggedRegion reg = regions.getRegion(r.Name);
@@ -243,10 +244,43 @@ namespace RegionFlags
                                     npc.active = false;
                                     NetMessage.SendData(23, -1, -1, "", npc.whoAmI, 0f, 0f, 0f, 0);
                                 }
-                                /*else if (flags.Contains(Flags.NOPROJ))
+                            }
+                        }
+                    }
+                }
+                if ((now - lastUpdate).TotalSeconds > 0)
+                {
+                    lastUpdate = now;
+                    lock (Main.projectile)
+                    {
+                        foreach (Projectile proj in Main.projectile)
+                        {
+                            if (!proj.active)
+                                continue;
+
+                            Region r = TShock.Regions.GetTopRegion(
+                            TShock.Regions.InAreaRegion((int)proj.position.X / 16, (int)proj.position.Y / 16));
+
+                            if (r != null)
+                            {
+                                FlaggedRegion reg = regions.getRegion(r.Name);
+                                if (reg != null)
                                 {
-                                    
-                                }*/
+                                    List<Flags> flags = reg.getFlags();
+                                    if (flags.Contains(Flags.NOPROJ))
+                                    {
+                                        proj.active = false;
+                                        NetMessage.SendData(29, -1, -1, "", proj.whoAmI, 0f, 0f, 0f, 0);
+
+                                    }
+                                    else if (flags.Contains(Flags.PJKILL))
+                                    {
+                                        //for(int p = 0; p < 422; p++ )
+                                        //Main.projectile[p].Kill;
+                                        proj.Kill();
+                                        NetMessage.SendData(29, -1, -1, "", proj.whoAmI, 0f, 0f, 0f, 0);
+                                    }
+                                }
                             }
                         }
                     }

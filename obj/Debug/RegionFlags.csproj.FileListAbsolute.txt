@@ -24,3 +24,9 @@ D:\dev\Work\RegionFlags\bin\TShockAPI.dll
 D:\dev\Work\RegionFlags\obj\Debug\RegionFlags.csprojResolveAssemblyReference.cache
 D:\dev\Work\RegionFlags\obj\Debug\RegionFlags.dll
 D:\dev\Work\RegionFlags\obj\Debug\RegionFlags.pdb
+D:\dev\Work\RegionFlags\bin\HttpServer.dll
+D:\dev\Work\RegionFlags\bin\Newtonsoft.Json.dll
+D:\dev\Work\RegionFlags\bin\TShockAPI.pdb
+D:\dev\Work\RegionFlags\bin\TShockAPI.xml
+D:\dev\Work\RegionFlags\bin\HttpServer.pdb
+D:\dev\Work\RegionFlags\bin\HttpServer.xml
