@@ -30,3 +30,4 @@ D:\dev\Work\RegionFlags\bin\TShockAPI.pdb
 D:\dev\Work\RegionFlags\bin\TShockAPI.xml
 D:\dev\Work\RegionFlags\bin\HttpServer.pdb
 D:\dev\Work\RegionFlags\bin\HttpServer.xml
+D:\dev\Work\RegionFlags\bin\MySql.Data.dll

@@ -72,10 +72,10 @@ namespace RegionFlags
 
         public override void Initialize()
         {
-            Commands.ChatCommands.Add(new Command("setflags", SetFlags, "rflags", "rf"));
-            Commands.ChatCommands.Add(new Command("defineflag", DefineRegion, "dreg"));
-            Commands.ChatCommands.Add(new Command("setflags", SetDPS, "regdamage", "rd"));
-            Commands.ChatCommands.Add(new Command("setflags", SetHPS, "regheal", "rh"));
+            Commands.ChatCommands.Add(new Command("rf.set", SetFlags, "rflag", "rf"));
+            Commands.ChatCommands.Add(new Command("rf.define", DefineRegion, "dreg", "dr"));
+            Commands.ChatCommands.Add(new Command("rf.set", SetDPS, "regdps", "rd"));
+            Commands.ChatCommands.Add(new Command("rf.set", SetHPS, "reghps", "rh"));
             ServerApi.Hooks.GameUpdate.Register(this, OnUpdate);
             ServerApi.Hooks.GamePostInitialize.Register(this, Import, -1);
             GetDataHandlers.ItemDrop += OnItemDrop;
@@ -106,7 +106,7 @@ namespace RegionFlags
                         String.Format("Server={0}; Port={1}; Database={2}; Uid={3}; Pwd={4};",
                                       hostport[0],
                                       hostport.Length > 1 ? hostport[1] : "3306",
-                                      "RegionFlags",
+                                      "regionflags",
                                       TShock.Config.MySqlUsername,
                                       TShock.Config.MySqlPassword
                             );
@@ -125,7 +125,7 @@ namespace RegionFlags
             var table = new SqlTable("Regions",
                                      new SqlColumn("Name", MySqlDbType.VarChar, 56){ Length = 56, Primary = true},
                                      //new SqlColumn("WorldID", MySqlDbType.Int32),
-                                     new SqlColumn("Flags", MySqlDbType.Text){ DefaultValue = "0" },
+                                     new SqlColumn("Flags", MySqlDbType.Int32){ DefaultValue = "0" },
                                      new SqlColumn("Damage", MySqlDbType.Int32) { DefaultValue = "0" },
                                      new SqlColumn("Heal", MySqlDbType.Int32) { DefaultValue = "0" },
 									 new SqlColumn("BannedItems", MySqlDbType.Text) { DefaultValue = "" }
@@ -270,7 +270,7 @@ namespace RegionFlags
                                     if (flags.Contains(Flags.NOPROJ))
                                     {
                                         proj.active = false;
-                                        NetMessage.SendData(29, -1, -1, "", proj.whoAmI, 0f, 0f, 0f, 0);
+                                        NetMessage.SendData(26, -1, -1, "", proj.whoAmI, 0f, 0f, 0f, 0);
 
                                     }
                                     else if (flags.Contains(Flags.PJKILL))
@@ -278,7 +278,7 @@ namespace RegionFlags
                                         //for(int p = 0; p < 422; p++ )
                                         //Main.projectile[p].Kill;
                                         proj.Kill();
-                                        NetMessage.SendData(29, -1, -1, "", proj.whoAmI, 0f, 0f, 0f, 0);
+                                        NetMessage.SendData(26, -1, -1, "", proj.whoAmI, 0f, 0f, 0f, 0);
                                     }
                                 }
                             }
@@ -300,7 +300,7 @@ namespace RegionFlags
             }
             if( args.Parameters.Count < 3 )
             {
-                args.Player.SendMessage("Invalid usage: /rflags(/rf) set|del [region name] [flag]", Color.Red);
+                args.Player.SendMessage("Invalid usage: /rflag(/rf) set|del [region name] [flag]", Color.Red);
                 return;
             }
 
@@ -359,7 +359,7 @@ namespace RegionFlags
         {
             if( args.Parameters.Count < 1 )
             {
-                args.Player.SendMessage("Invalid usage: /dreg [region name]", Color.Red);
+                args.Player.SendMessage("Invalid usage: /dreg(/dr) [region name]", Color.Red);
             }
             else
             {                                                       
@@ -384,7 +384,7 @@ namespace RegionFlags
         {
             if (args.Parameters.Count < 2)
             {
-                args.Player.SendMessage("Invalid usage: /regdamage[/rd] [region name] [damage]", Color.Red); // param) region name: 0, damage: 1, total count: 2
+                args.Player.SendMessage("Invalid usage: /regdps(/rd) [region name] <dps>", Color.Red); // param) region name: 0, damage: 1, total count: 2
             }
             else
             {
@@ -413,7 +413,7 @@ namespace RegionFlags
         {
             if (args.Parameters.Count < 2)
             {
-                args.Player.SendMessage("Invalid usage: /regheal[/rh] [region name] [heal]", Color.Red);
+                args.Player.SendMessage("Invalid usage: /reghps(/rh) [region name] <hps>", Color.Red);
             }
             else
             {
